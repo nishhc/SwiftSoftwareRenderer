@@ -1,88 +1,47 @@
-//
-//  ContentView.swift
-//  SwiftSoftwareRenderer
-//
-//  Created by Nishchai Chawla on 2/20/25.
-//
-
 import SwiftUI
-import CoreData
+
+private var renderer = SoftwareRenderer(width: 640, height: 480)
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    
+    @State private var zoomScale: CGFloat = 1.0
+    
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-            Text("Select an item")
-        }
-    }
+        VStack {
+            if let cgImage = renderer.renderFrame() {
+                Image(cgImage, scale: 1.0, label: Text("Rendered Image"))                    .interpolation(.none)  //
+                    .resizable()
+                    .scaleEffect(zoomScale)
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            } else {
+                Text("Failed to render image")
             }
         }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+        .onAppear {
+            renderer.startRendering()
+            drawTestPattern()
         }
+        .gesture(
+            MagnificationGesture()
+                .onChanged { value in
+                    
+                    zoomScale = round(value) 
+                }
+        )
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
 
-#Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+
+private func drawTestPattern() {
+    for x in 200...450 {
+        for y in 100...350 {
+            renderer.putPixel(x: x, y: y, color: 0xFFFFFFFF)
+        }
+    }
 }
