@@ -20,6 +20,29 @@ public class SoftwareRenderer: ObservableObject {
         guard x >= 0, y >= 0, x < width, y < height else { return }
         pixelData[y * width + x] = color
     }
+    
+    func drawLine(x1: Int, y1: Int, x2: Int, y2: Int, color: UInt32) {
+        var x1 = x1, y1 = y1, x2 = x2, y2 = y2
+        let dx = abs(x2 - x1)
+        let dy = -abs(y2 - y1)
+        let sx = x1 < x2 ? 1 : -1
+        let sy = y1 < y2 ? 1 : -1
+        var err = dx + dy
+        
+        while true {
+            putPixel(x: x1, y: y1, color: color)
+            if x1 == x2 && y1 == y2 { break }
+            let e2 = 2 * err
+            if e2 >= dy {
+                err += dy
+                x1 += sx
+            }
+            if e2 <= dx {
+                err += dx
+                y1 += sy
+            }
+        }
+    }
 
     func renderFrame() -> CGImage? {
         let bitsPerComponent = 8

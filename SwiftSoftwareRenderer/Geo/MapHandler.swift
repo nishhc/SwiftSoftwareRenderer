@@ -19,7 +19,7 @@ class MapHandler {
                          [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
                          [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1],
                          [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-                         [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1],
+                         [1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1],
                          [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
                          [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
     
@@ -35,7 +35,10 @@ class MapHandler {
             var cx : Int = 0
             for cc in 0..<columns{
                 if map[cr][cc] == 1 {
-                    fillRectangle(x: cx, y: cy, width: wallLength, height: wallWidth, color: 0xFFFFFFFF)
+                    renderer.drawLine(x1: cx, y1: cy, x2: cx+wallLength, y2: cy, color: 0xFFFFFFFF)
+                    renderer.drawLine(x1: cx, y1: cy+wallWidth, x2: cx+wallLength, y2: cy+wallWidth, color: 0xFFFFFFFF)
+                    renderer.drawLine(x1: cx, y1: cy, x2: cx, y2: cy+wallWidth, color: 0xFFFFFFFF)
+                    renderer.drawLine(x1: cx+wallLength, y1: cy, x2: cx+wallLength, y2: cy+wallWidth, color: 0xFFFFFFFF)
                 }
                 cx += wallLength
             }

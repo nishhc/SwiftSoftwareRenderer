@@ -1,33 +1,26 @@
 import SwiftUI
 
-
 struct ContentView: View {
-    
-    static let xres : Int = 640
-    static let yres : Int = 400
-    
-    @State private var zoomScale: CGFloat = 1.0
-    private var ch = ContentHandler()
-    
+    static let xres: Int = 640
+    static let yres: Int = 400
+
+    @StateObject private var ch = ContentHandler()
+
     var body: some View {
         VStack {
-            ch.start()
+            ch.image
         }
-        .frame(width:CGFloat(ContentView.xres), height: CGFloat(ContentView.yres))
+        .frame(width: CGFloat(ContentView.xres), height: CGFloat(ContentView.yres))
         .aspectRatio(contentMode: .fit)
+        .clipped()
+        .border(Color.white, width: 1)
         .onAppear {
+            ch.start()
             ch.place()
         }
-        /*
-        .gesture(
-            MagnificationGesture()
-                .onChanged { value in
-                    
-                    zoomScale = round(value)
-                }
-        )*/
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
