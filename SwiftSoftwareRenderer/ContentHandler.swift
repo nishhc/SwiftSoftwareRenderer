@@ -12,6 +12,11 @@ class ContentHandler: ObservableObject {
                                 angle: 0,
                                 renderer: renderer)
     
+    private var raycaster = Raycaster(renderer: renderer,
+                                      map: mapHandler.map,
+                                      winHeight: ContentView.xres,
+                                      winLength: ContentView.yres)
+    
     var upPressed = false
     var downPressed = false
     var leftPressed = false
@@ -56,6 +61,8 @@ class ContentHandler: ObservableObject {
         renderer.clear(color: 0xFF202020)
         mapHandler.draw2DMap()
         player.draw()
+        let fov: CGFloat = 60 * (.pi / 180) 
+        raycaster.castFOV(from: player.position, direction: player.angle, fov: fov, rayCount: 100)
         updateImage()
     }
     
