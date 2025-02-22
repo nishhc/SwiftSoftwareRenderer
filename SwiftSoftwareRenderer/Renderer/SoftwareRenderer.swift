@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreGraphics
 
-class SoftwareRenderer: ObservableObject {
+public class SoftwareRenderer: ObservableObject {
     let width: Int
     let height: Int
     @Published private var pixelData: [UInt32]
@@ -50,7 +50,7 @@ class SoftwareRenderer: ObservableObject {
     }
 
     func startRendering() {
-        clear(color: 0xFF202020) // Dark gray background
+        clear(color: 0xFF202020) // Dark
     }
 
 }
