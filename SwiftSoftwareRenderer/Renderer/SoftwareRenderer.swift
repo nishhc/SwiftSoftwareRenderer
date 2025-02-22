@@ -4,7 +4,7 @@ import CoreGraphics
 public class SoftwareRenderer: ObservableObject {
     let width: Int
     let height: Int
-    @Published private var pixelData: [UInt32]
+    private var pixelData: [UInt32]
 
     init(width: Int, height: Int) {
         self.width = width

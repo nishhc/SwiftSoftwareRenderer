@@ -1,7 +1,7 @@
 import SwiftUI
 
-private var renderer = SoftwareRenderer(width: 640, height: 480)
-private var mapHandler = MapHandler(winHeight: 640, winLength: 480, renderer: renderer)
+private var renderer = SoftwareRenderer(width: ContentView.xres, height: ContentView.yres)
+private var mapHandler = MapHandler(winHeight: ContentView.xres, winLength: ContentView.yres, renderer: renderer)
 
 class ContentHandler {
     

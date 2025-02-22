@@ -3,6 +3,9 @@ import SwiftUI
 
 struct ContentView: View {
     
+    static let xres : Int = 640
+    static let yres : Int = 400
+    
     @State private var zoomScale: CGFloat = 1.0
     private var ch = ContentHandler()
     
@@ -10,7 +13,7 @@ struct ContentView: View {
         VStack {
             ch.start()
         }
-        .frame(width:640, height: 480)
+        .frame(width:CGFloat(ContentView.xres), height: CGFloat(ContentView.yres))
         .aspectRatio(contentMode: .fit)
         .onAppear {
             ch.place()
