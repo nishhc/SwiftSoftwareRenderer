@@ -10,16 +10,19 @@ struct ContentView: View {
         VStack {
             ch.start()
         }
+        .frame(width:640, height: 480)
+        .aspectRatio(contentMode: .fit)
         .onAppear {
             ch.place()
         }
+        /*
         .gesture(
             MagnificationGesture()
                 .onChanged { value in
                     
                     zoomScale = round(value)
                 }
-        )
+        )*/
     }
 }
 

@@ -1,7 +1,7 @@
 import SwiftUI
 
-private var renderer = SoftwareRenderer(width: 320, height: 240)
-private var mapHandler = MapHandler(winHeight: 320, winLength: 240, renderer: renderer)
+private var renderer = SoftwareRenderer(width: 640, height: 480)
+private var mapHandler = MapHandler(winHeight: 640, winLength: 480, renderer: renderer)
 
 class ContentHandler {
     
@@ -12,7 +12,7 @@ class ContentHandler {
     
     func start () -> Image {
             if let cgImage = renderer.renderFrame() {
-                return Image(cgImage, scale: 1.0, label: Text("Rendered Image"))                    .interpolation(.none)  //
+                return Image(cgImage, scale: 1.0, label: Text("Rendered Image")).interpolation(.none)  //
                     .resizable()
             } else {
                 return Image("")
