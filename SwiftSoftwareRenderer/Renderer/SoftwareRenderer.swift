@@ -76,6 +76,7 @@ public class SoftwareRenderer: ObservableObject {
         clear(color: 0xFF202020) // Dark
     }
     
+    // heavily modified from before due to slow speeds
     func fillRectangle(x: Int, y: Int, width: Int, height: Int, color: UInt32) {
         let startX = max(0, x)
           let startY = max(0, y)
@@ -83,16 +84,16 @@ public class SoftwareRenderer: ObservableObject {
         let endY = min(self.height, y + height)
           let rowCount = endX - startX
 
-          // Pre-create a row buffer filled with the desired color.
+          // Pre-create a row buffer filled with the desired color. faster solution
           let rowBuffer = [UInt32](repeating: color, count: rowCount)
 
-          // Use low-level pointer operations to copy the rowBuffer into each row of the rectangle.
+          // Use low-level pointer operations to copy the rowBuffer into each row of the rectangle. much faster than previous method
           pixelData.withUnsafeMutableBufferPointer { buffer in
               for row in startY..<endY {
                   let startIndex = row * self.width + startX
                   rowBuffer.withUnsafeBufferPointer { src in
                       buffer.baseAddress!.advanced(by: startIndex)
-                          .assign(from: src.baseAddress!, count: rowCount)
+                          .update(from: src.baseAddress!, count: rowCount)
                   }
               }
           }
