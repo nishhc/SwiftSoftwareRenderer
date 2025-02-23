@@ -5,30 +5,27 @@ class MapHandler {
     private var winHeight : Int;
     private var winLength : Int;
     private var renderer : SoftwareRenderer
+    private var map : [[Int]]
+    private var columns : Int
+    private var rows : Int
+    private var wallLength : Int
+    private var wallWidth : Int
     
-    init(winHeight: Int, winLength: Int, renderer: SoftwareRenderer) {
+    init(winHeight: Int, winLength: Int, renderer: SoftwareRenderer, map : [[Int]] ) {
         self.winHeight = winHeight
         self.winLength = winLength
         self.renderer = renderer
+        self.map = map
+        self.columns = map[0].count
+        self.rows = map.count
+        self.wallLength = Int(ceil(Double(winHeight) / Double(columns)))
+        self.wallWidth = Int(ceil(Double(winLength) / Double(rows)))
     }
     
-    var map : [[Int]] = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                         [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-                         [1,0,1,1,0,0,1,0,0,0,0,0,0,0,0,1],
-                         [1,0,0,0,0,0,1,0,0,0,0,1,1,0,0,1],
-                         [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-                         [1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1],
-                         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-                         [1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1],
-                         [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
-                         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
+    
     
     public func draw2DMap() {
-        let columns : Int = map[0].count
-        let rows : Int = map.count
-
-        let wallLength = Int(ceil(Double(winHeight) / Double(columns)))
-        let wallWidth = Int(ceil(Double(winLength) / Double(rows)))
+       
 
         var cy : Int = 0
         for cr in 0..<rows {
@@ -45,6 +42,16 @@ class MapHandler {
             cy += wallWidth
         }
     }
+    
+    
+    public func returnTilePos(position : CGPoint) -> CGPoint {
+        let gx : Int = Int(position.x)
+        let gy : Int = Int(position.y)
+        
+        return CGPoint(x: Int(gx / wallLength) * wallLength, y: Int(gy / wallWidth) * wallWidth)
+        
+    }
+     
     
     private func fillRectangle(x: Int, y: Int, width: Int, height: Int, color: UInt32) {
         for dy in 0..<height {
