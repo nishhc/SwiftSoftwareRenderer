@@ -2,27 +2,37 @@ import CoreGraphics
 import SwiftUI
 
 class Raycaster {
+    
+    // raycasting vars
     private let FOV: Double = .pi / 3.0
     private let hFOV: Double = (.pi / 3.0) / 2.0
     private let NUM_RAYS: Int = Int(ContentView.xres / 2)
     private let hNUM_RAYS: Int = Int(ContentView.xres / 4)
     private let DELTA_ANGLE: Double = (Double.pi / 3.0) / Double(ContentView.xres / 2)
     private let MAX_DEPTH: Int = 20
-
+    public var depth = 0.0
+    private var SCREEN_DIST : CGFloat
+    private var SCALE : Int
+    // 3d projection vars
+    
+    private let half_width = ContentView.xres / 2
+    private let half_height = ContentView.yres / 2
+    
     private var renderer : SoftwareRenderer
     private var map : MapHandler
     
     init(renderer : SoftwareRenderer, maphandler : MapHandler) {
         self.renderer = renderer
         self.map = maphandler
+        self.SCREEN_DIST = (CGFloat(half_width) / tan(hFOV))
+        self.SCALE = ContentView.xres / NUM_RAYS
     }
     
     public func castRay(position: CGPoint, player : Player) {
         let tilePos = map.returnTilePos(position: position)
         var ray_angle = player.angle - hFOV + 0.0001
-        var depth = 0.0
         
-        for _ in 0..<NUM_RAYS {
+        for ray in 0..<NUM_RAYS {
             let sin_a = sin(ray_angle)
             let cos_a = cos(ray_angle)
             
@@ -70,6 +80,7 @@ class Raycaster {
         
             for _ in 0..<MAX_DEPTH {
                 let tile_point : (Int, Int) = (Int(x_vert), Int(y_vert))
+    
                 let arrCheck : [Int] = map.mapGeoPoints[tile_point.1]  ?? []
                 if (arrCheck.contains(tile_point.0)) {
                     break
@@ -84,18 +95,28 @@ class Raycaster {
             
         
             if (depth_vert < depth_hor) {
-                depth = depth_vert
+                self.depth = depth_vert
             } else
             {
-                depth = depth_hor
+                self.depth = depth_hor
             }
          
+            // debug raylines
+            //renderer.drawLine(x1: Int(player.position.x), y1: Int(player.position.y), x2: Int(player.position.x + CGFloat(40.0 * cos_a * depth)), y2: Int(player.position.y + CGFloat(40.0 * sin_a * depth)), color: 0xFF0000FF)
+            depth *= cos(player.angle - ray_angle)
             
-            renderer.drawLine(x1: Int(player.position.x), y1: Int(player.position.y), x2: Int(player.position.x + CGFloat(40.0 * cos_a * depth)), y2: Int(player.position.y + CGFloat(40.0 * sin_a * depth)), color: 0xFFFFFFFF)
-            
+            let proj_height = SCREEN_DIST / (depth + 0.0001)
+            renderer.fillRectangle(x: ray * SCALE, y: half_height - Int(proj_height) / 2,  width: SCALE, height: Int(proj_height), color: 0xFFFFFFFF)
             ray_angle += CGFloat(DELTA_ANGLE)
             
         }
+        
+        func calculateRBValue(depth: Double) -> UInt32 {
+            let result = (255.0 / (1.0 + pow(depth, pow(5, 0.00002)))) * 3.0
+            return UInt32(max(0, min(result, Double(UInt32.max))))
+        }
+        
+        
         
     }
 

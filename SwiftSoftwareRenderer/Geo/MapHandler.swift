@@ -76,13 +76,7 @@ class MapHandler {
     }
      
     
-    private func fillRectangle(x: Int, y: Int, width: Int, height: Int, color: UInt32) {
-        for dy in 0..<height {
-            for dx in 0..<width {
-                renderer.putPixel(x: x + dx, y: y + dy, color: color)
-            }
-        }
-    }
+
 }
 
 

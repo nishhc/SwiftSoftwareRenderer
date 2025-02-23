@@ -69,10 +69,10 @@ class ContentHandler: ObservableObject {
     
     func updateScene() {
         renderer.clear(color: 0xFF202020)
+        
+        raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player)
         mapHandler.draw2DMap()
         player.draw()
-        //let fov: CGFloat = 60 * (.pi / 180)
-        raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player)
         updateImage()
         
     }
