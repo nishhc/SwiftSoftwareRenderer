@@ -22,7 +22,7 @@ class ContentHandler: ObservableObject {
     private var player = Player(x: CGFloat(ContentView.xres) / 2,
                                 y: CGFloat(ContentView.yres) / 2,
                                 angle: 0,
-                                renderer: renderer)
+                                renderer: renderer, handler: mapHandler)
 
     
    
@@ -71,8 +71,8 @@ class ContentHandler: ObservableObject {
         renderer.clear(color: 0xFF202020)
         
         raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player)
-        mapHandler.draw2DMap()
-        player.draw()
+        //mapHandler.draw2DMap()
+        //player.draw()
         updateImage()
         
     }

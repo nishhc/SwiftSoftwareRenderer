@@ -77,14 +77,27 @@ public class SoftwareRenderer: ObservableObject {
     }
     
     func fillRectangle(x: Int, y: Int, width: Int, height: Int, color: UInt32) {
-        // Draw the top and bottom sides
-        drawLine(x1: x, y1: y, x2: x + width - 1, y2: y, color: color)
-        drawLine(x1: x, y1: y + height - 1, x2: x + width - 1, y2: y + height - 1, color: color)
-        
-        // Draw the left and right sides
-        drawLine(x1: x, y1: y, x2: x, y2: y + height - 1, color: color)
-        drawLine(x1: x + width - 1, y1: y, x2: x + width - 1, y2: y + height - 1, color: color)
+        let startX = max(0, x)
+          let startY = max(0, y)
+        let endX = min(self.width, x + width)
+        let endY = min(self.height, y + height)
+          let rowCount = endX - startX
+
+          // Pre-create a row buffer filled with the desired color.
+          let rowBuffer = [UInt32](repeating: color, count: rowCount)
+
+          // Use low-level pointer operations to copy the rowBuffer into each row of the rectangle.
+          pixelData.withUnsafeMutableBufferPointer { buffer in
+              for row in startY..<endY {
+                  let startIndex = row * self.width + startX
+                  rowBuffer.withUnsafeBufferPointer { src in
+                      buffer.baseAddress!.advanced(by: startIndex)
+                          .assign(from: src.baseAddress!, count: rowCount)
+                  }
+              }
+          }
     }
+
 
 
 }
