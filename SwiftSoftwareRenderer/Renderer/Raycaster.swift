@@ -21,10 +21,8 @@ class Raycaster {
         let tilePos = map.returnTilePos(position: position)
         var ray_angle = player.angle - hFOV + 0.0001
         var depth = 0.0
-        print (position, tilePos)
-        print(map.mapGeoPoints[Int(tilePos.y)])
         
-        for ray in 0..<NUM_RAYS {
+        for _ in 0..<NUM_RAYS {
             let sin_a = sin(ray_angle)
             let cos_a = cos(ray_angle)
             
@@ -41,8 +39,8 @@ class Raycaster {
             var delta_depth = _dy / sin_a
             var _dx = delta_depth * cos_a
             
-            for i in 0..<MAX_DEPTH {
-                var tile_point : (Int, Int) = (Int(x_hor), Int(y_hor))
+            for _ in 0..<MAX_DEPTH {
+                let tile_point : (Int, Int) = (Int(x_hor), Int(y_hor))
                 let arrCheck : [Int] = map.mapGeoPoints[tile_point.1] ?? []
                 if (arrCheck.contains(tile_point.0)) {
                     break
@@ -70,11 +68,9 @@ class Raycaster {
              _dy = delta_depth * sin_a
             
         
-            for i in 0..<MAX_DEPTH {
-                var tile_point : (Int, Int) = (Int(x_vert), Int(y_vert))
-                
+            for _ in 0..<MAX_DEPTH {
+                let tile_point : (Int, Int) = (Int(x_vert), Int(y_vert))
                 let arrCheck : [Int] = map.mapGeoPoints[tile_point.1]  ?? []
-
                 if (arrCheck.contains(tile_point.0)) {
                     break
                 }
