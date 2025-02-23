@@ -106,16 +106,19 @@ class Raycaster {
             depth *= cos(player.angle - ray_angle)
             
             let proj_height = SCREEN_DIST / (depth + 0.0001)
-            renderer.fillRectangle(x: ray * SCALE, y: half_height - Int(proj_height) / 2,  width: SCALE, height: Int(proj_height), color: 0xFFFFFFFF)
+            renderer.fillRectangle(x: ray * SCALE, y: half_height - Int(proj_height) / 2,  width: SCALE, height: Int(proj_height), color: colorForDepth(depth: depth))
             ray_angle += CGFloat(DELTA_ANGLE)
             
         }
         
-        func calculateRBValue(depth: Double) -> UInt32 {
-            let result = (255.0 / (1.0 + pow(depth, pow(5, 0.00002)))) * 3.0
-            return UInt32(max(0, min(result, Double(UInt32.max))))
+        func colorForDepth(depth: Double) -> UInt32 {
+            let brightness = 255.0 / (1.0 + (pow(depth, 5) * 0.00002))
+            
+            let channel = UInt32(max(0, min(255, brightness)))
+            
+            return (0xFF << 24) | (channel << 16) | (channel << 8) | channel
         }
-        
+
         
         
     }

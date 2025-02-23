@@ -49,9 +49,13 @@ class Player {
                            y: position.y - sin(angle) * half)
         let tip  = CGPoint(x: position.x + cos(angle) * half,
                            y: position.y + sin(angle) * half)
+        let head  = CGPoint(x: position.x + cos(angle) * (half/4),
+                           y: position.y + sin(angle) * (half/4))
         let color: UInt32 = 0xFF00FF00  // Green color
         
         renderer.drawLine(x1: Int(tail.x), y1: Int(tail.y),
                           x2: Int(tip.x),  y2: Int(tip.y), color: color)
+        renderer.drawLine(x1: Int(head.x), y1: Int(head.y),
+                          x2: Int(tip.x),  y2: Int(tip.y), color: 0xFF0000FF)
     }
 }

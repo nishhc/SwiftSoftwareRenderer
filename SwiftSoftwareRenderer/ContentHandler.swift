@@ -32,7 +32,7 @@ class ContentHandler: ObservableObject {
     var leftPressed = false
     var rightPressed = false
     
-    let moveSpeed: CGFloat = 120
+    let moveSpeed: CGFloat = 80
     let turnSpeed: CGFloat = 3.0
     
     private var timer: Timer?
@@ -44,7 +44,7 @@ class ContentHandler: ObservableObject {
     
     func start() {
         lastTime = CFAbsoluteTimeGetCurrent()
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0/60.0, repeats: true) { [weak self] timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0/120.0, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             let currentTime = CFAbsoluteTimeGetCurrent()
             let deltaTime = currentTime - self.lastTime
