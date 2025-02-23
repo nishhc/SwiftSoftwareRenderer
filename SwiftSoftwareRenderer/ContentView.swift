@@ -4,7 +4,7 @@ import AppKit
 struct ContentView: View {
     static let xres: Int = 640
     static let yres: Int = 400
-
+    
     @StateObject private var ch = ContentHandler()
 
     var body: some View {

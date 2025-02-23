@@ -5,7 +5,7 @@ class Player {
     var position: CGPoint
     var angle: CGFloat
     let renderer: SoftwareRenderer
-    let lineLength: CGFloat = 20
+    let lineLength: CGFloat = 20 / 640 * CGFloat(ContentView.xres)
 
     init(x: CGFloat, y: CGFloat, angle: CGFloat, renderer: SoftwareRenderer) {
         self.position = CGPoint(x: x, y: y)
@@ -17,6 +17,8 @@ class Player {
         position.x += cos(angle) * distance
         position.y += sin(angle) * distance
     }
+    
+    
     
     func turn(delta: CGFloat) {
         angle += delta

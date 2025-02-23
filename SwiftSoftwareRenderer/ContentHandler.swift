@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 private var renderer = SoftwareRenderer(width: ContentView.xres, height: ContentView.yres)
-private var mapHandler = MapHandler(winHeight: ContentView.xres, winLength: ContentView.yres, renderer: renderer, map :
+private var mapHandler = MapHandler(winHeight: ContentView.xres, winLength: ContentView.yres, renderer: renderer, mapa :
 [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
  [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
  [1,0,1,1,0,0,1,0,0,0,0,0,0,0,0,1],
@@ -13,6 +13,8 @@ private var mapHandler = MapHandler(winHeight: ContentView.xres, winLength: Cont
  [1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1],
  [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]])
+
+private var raycaster = Raycaster(renderer: renderer, maphandler: mapHandler)
 
 class ContentHandler: ObservableObject {
     @Published var image: Image = Image("")
@@ -70,7 +72,7 @@ class ContentHandler: ObservableObject {
         mapHandler.draw2DMap()
         player.draw()
         //let fov: CGFloat = 60 * (.pi / 180)
-        //  raycaster.castFOV(from: player.position, direction: player.angle, fov: fov, rayCount: 100)
+        raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player)
         updateImage()
         
     }
