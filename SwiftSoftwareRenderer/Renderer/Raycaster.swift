@@ -28,7 +28,7 @@ class Raycaster {
         self.SCALE = ContentView.xres / NUM_RAYS
     }
     
-    public func castRay(position: CGPoint, player : Player) {
+    public func castRay(position: CGPoint, player : Player, rayMode : Bool) {
         let tilePos = map.returnTilePos(position: position)
         var ray_angle = player.angle - hFOV + 0.0001
         
@@ -102,11 +102,15 @@ class Raycaster {
             }
          
             // debug raylines
-            //renderer.drawLine(x1: Int(player.position.x), y1: Int(player.position.y), x2: Int(player.position.x + CGFloat(40.0 * cos_a * depth)), y2: Int(player.position.y + CGFloat(40.0 * sin_a * depth)), color: 0xFF0000FF)
-            depth *= cos(player.angle - ray_angle)
+            if rayMode {
+                renderer.drawLine(x1: Int(player.position.x), y1: Int(player.position.y), x2: Int(player.position.x + CGFloat(15.0 * cos_a * depth)), y2: Int(player.position.y + CGFloat(15.0 * sin_a * depth)), color: 0xFF0000FF)
+            }
+                depth *= cos(player.angle - ray_angle)
             
             let proj_height = SCREEN_DIST / (depth + 0.0001)
-            renderer.fillRectangle(x: ray * SCALE, y: half_height - Int(proj_height) / 2,  width: SCALE, height: Int(proj_height), color: colorForDepth(depth: depth))
+            if !rayMode {
+                renderer.fillRectangle(x: ray * SCALE, y: half_height - Int(proj_height) / 2,  width: SCALE, height: Int(proj_height), color: colorForDepth(depth: depth))
+            }
             ray_angle += CGFloat(DELTA_ANGLE)
             
         }

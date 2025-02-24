@@ -24,7 +24,9 @@ class ContentHandler: ObservableObject {
                                 angle: 0,
                                 renderer: renderer, handler: mapHandler)
 
-    
+     var is3DProjectionEnabled = true
+     var is2DProjectionEnabled = false
+     var is2DRaycastEnabled = false
    
     
     var upPressed = false
@@ -70,9 +72,17 @@ class ContentHandler: ObservableObject {
     func updateScene() {
         renderer.clear(color: 0xFF202020)
         
-        raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player)
-        //mapHandler.draw2DMap()
-        //player.draw()
+        if (is3DProjectionEnabled) {
+            print("Enabled 3d")
+            raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player, rayMode: false)
+        }
+        if (is2DRaycastEnabled) {
+            raycaster.castRay(position: mapHandler.returnGridPos(position: player.position), player: player, rayMode : true)
+        }
+        if (is2DProjectionEnabled) {
+            mapHandler.draw2DMap()
+            player.draw()
+        }
         updateImage()
         
     }
